@@ -34,7 +34,7 @@ class Lineas extends Component {
   }
 
   componentDidMount() {
-    fetch("//www.metrovias.com.ar/Subterraneos/Estado?site=Metrovias")
+    fetch("http://www.metrovias.com.ar/Subterraneos/Estado?site=Metrovias")
       .then(res => res.json())
       .then(
         (result) => {
