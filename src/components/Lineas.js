@@ -34,31 +34,39 @@ class Lineas extends Component {
   }
 
   componentDidMount() {
-    fetch("http://www.metrovias.com.ar/Subterraneos/Estado?site=Metrovias")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            lineas: result
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
+    this.timerID = setInterval(
+      () => fetch("http://www.metrovias.com.ar/Subterraneos/Estado?site=Metrovias")
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+              isLoaded: true,
+              lineas: result
+            });
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            this.setState({
+              isLoaded: true,
+              error
+            });
+          }
+        ),
+      1000
+      );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
   }
 
   render() {
     const { error, isLoaded, lineas } = this.state;
     if (error) {
-      return <div>Error: {error.message}</div>;
+      console.error(error.message);
+      return <div>No se ha podido cargar la información</div>;
     } else if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
